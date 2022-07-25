@@ -1,8 +1,6 @@
-const fs = require('fs');
 const inquirer = require('inquirer');
-
-const path = require('path');
-const { inherits } = require('util');
+const connection = require('./index')
+const seedTable = require('console.table');
 
 const viewOptionsQuestions = [
     {
@@ -16,37 +14,33 @@ const viewOptionsQuestions = [
             'add a department',
             'add a role',
             'add an employee',
-            'update an employee role'
+            'update an employee role',
+            'done tabling'
         ]
     }
 ];
 
 // switch(viewAnswer)
 
-function init(viewAnswer) {
-    inquirer.prompt(viewOptionsQuestions).then(view => {
-        if (viewAnswer === 'view all departments') {
-            // function
-            // console.log( table showing department names and department ids )
-        } else if (viewAnswer === 'view all roles') {
-            viewRoleDatas();
-            init();
-            // console.log( job title, role id, the department that role belongs to, and the salary for that role )
-        } else if (viewAnswer === 'view all employee') {
-            // console.log( table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to )
-        } else if (viewAnswer === 'add a department') {
-            // view.push(to the department table)
+function init() {
+    inquirer.prompt(viewOptionsQuestions).then(viewAnswer => {
+        if (viewAnswer.viewOption === 'view all departments') {
+            viewDepartmentTable();
+        } else if (viewAnswer.viewOption === 'view all roles') {
+            viewRoleTable();
+        } else if (viewAnswer.viewOption === 'view all employee') {
+            viewEmployeeTable();
+        } else if (viewAnswer.viewOption === 'add a department') {
             // prompted to enter and add the name of the department to database
-        } else if (viewAnswer === 'add a role') {
+        } else if (viewAnswer.viewOption === 'add a role') {
             // prompted to enter the name, salary, and department for the role and that role is added to the database
-        } else if (viewAnswer === 'add an employee') {
+        } else if (viewAnswer.viewOption === 'add an employee') {
             // prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-        } else if (viewAnswer === 'update an employee role') {
+        } else if (viewAnswer.viewOption === 'update an employee role') {
             // prompted to select an employee to update and their new role and this information is updated in the database 
-
         } else {
-            console.log('done viewing');
-            return
+            console.log('bye');
+            return;
         };
     })
         .catch((error) => {
@@ -54,12 +48,57 @@ function init(viewAnswer) {
         });
 };
 
-function viewRoleDatas() {
-    const roleDatas = db.query('SELECT * FROM role', function (err, results) {
-        console.log(results);
-        console.table(roleDatas);
-    });
 
+
+function viewDepartmentTable() {
+    // console.log('im here')
+    connection.connect(err => {
+        if (err) {
+            console.log(err);
+            throw (err);
+        }
+    });
+    connection.query('SELECT * FROM department;', function (err, results) {
+        if (err) {
+            console.log(err);
+        }
+        // console.log(results);
+        console.table(results);
+        init();
+    });
+};
+
+function viewRoleTable() {
+    connection.connect(err => {
+        if (err) {
+            console.log(err);
+            throw (err);
+        }
+    });
+    connection.query('SELECT * FROM role;', function (err, results) {
+        if (err) {
+            console.log(err);
+        }
+        console.log(results);
+        console.table(results);
+        init();
+    });
+};
+
+function viewEmployeeTable() {
+    connection.connect(err => {
+        if (err) {
+            console.log(err);
+            throw (err);
+        }
+    });
+    connection.query('SELECT * FROM employee;', function (err, results) {
+        if (err) {
+            console.log(err);
+        }
+        console.table(results);
+        init();
+    });
 };
 
 

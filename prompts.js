@@ -20,6 +20,84 @@ const viewOptionsQuestions = [
     }
 ];
 
+const addDepartmentQuestion = [
+    {
+        message: "What is the name of the department?",
+        name: "addedDepartmentQuery",
+        type: 'input'
+    }
+];
+
+const addRoleQuestions = [
+    {
+        message: "What is the name of the role?",
+        name: "addedRoleQuery",
+        type: 'input'
+    },
+    {
+        message: "What is the salary of the role?",
+        name: "addedSalaryQuery",
+        type: 'input'
+    },
+    {
+        message: "Which department des the role belong to?",
+        name: "roleDepartmentQuery",
+        type: 'list',
+        choices: [
+            'Engineering',
+            'Finance',
+            'Legal',
+            'Sales',
+            'Service'
+        ]
+    },
+];
+
+const addEmployeeQuestions = [
+    {
+        message: 'What is the employees first name?',
+        name: 'employeeFirstNameQuery',
+        type: 'input',
+    },
+    {
+        message: 'What is the employees last name?',
+        name: 'employeeLastNameQuery',
+        type: 'input',
+    },
+    {
+        message: 'What is the employees role?',
+        name: 'employeeRoleQuery',
+        type: 'list',
+        choices: [
+            'Sales Lead',
+            'Salesperson',
+            'Account Manager',
+            'Patent Agent',
+            'Creative Leads',
+            'People Ops',
+            'Art Director',
+            'Lawyer'
+        ]
+    },
+    {
+        message: 'Who is the managing the employee?',
+        name: 'employeeManagerQuery',
+        type: 'list',
+        choices: [
+            'None',
+            'Elizabeth Bennet',
+            'Atticus Finch',
+            'Hermione Granger',
+            'Jane Eyre',
+            'Sherlock Holmes',
+            'Lisbeth Salander',
+            'Jo March'
+        ]
+    },
+];
+
+//questions for update employee role
+
 // switch(viewAnswer)
 
 function init() {
@@ -31,6 +109,7 @@ function init() {
         } else if (viewAnswer.viewOption === 'view all employee') {
             viewEmployeeTable();
         } else if (viewAnswer.viewOption === 'add a department') {
+            addDepartmentQuery(addDepartmentQuestion);
             // prompted to enter and add the name of the department to database
         } else if (viewAnswer.viewOption === 'add a role') {
             // prompted to enter the name, salary, and department for the role and that role is added to the database
@@ -101,6 +180,16 @@ function viewEmployeeTable() {
     });
 };
 
+function addDepartmentQuery() {
+    const insertDepartmentTable = 'INSERT INTO department(name) VALUES (?);';
+    try {
+        const addDepartmentToList = connection.query(insertDepartmentTable, addDepartmentQuestion.addedDepartment);
+        console.log(addDepartmentQuestion.addedDepartment);
+    } catch (error) {
+        console.log(error);
+    }
+
+};
 
 
 // function init () {

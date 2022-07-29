@@ -23,7 +23,7 @@ const viewOptionsQuestions = [
 const addDepartmentQuestion = [
     {
         message: "What is the name of the department?",
-        name: "addedDepartmentQuery",
+        name: "departmentName",
         type: 'input'
     }
 ];
@@ -31,17 +31,17 @@ const addDepartmentQuestion = [
 const addRoleQuestions = [
     {
         message: "What is the name of the role?",
-        name: "addedRoleQuery",
+        name: "roleName",
         type: 'input'
     },
     {
         message: "What is the salary of the role?",
-        name: "addedSalaryQuery",
+        name: "salaryOfRole",
         type: 'input'
     },
     {
         message: "Which department des the role belong to?",
-        name: "roleDepartmentQuery",
+        name: "roleDepartmentName",
         type: 'list',
         choices: [
             'Engineering',
@@ -109,8 +109,9 @@ function init() {
         } else if (viewAnswer.viewOption === 'view all employee') {
             viewEmployeeTable();
         } else if (viewAnswer.viewOption === 'add a department') {
-            addDepartmentQuery(addDepartmentQuestion);
-            // prompted to enter and add the name of the department to database
+            inquirer.prompt(addDepartmentQuestion).then(departmentAnswer => {
+               addDepartmentToTable(departmentAnswer.departmentName);
+            });
         } else if (viewAnswer.viewOption === 'add a role') {
             // prompted to enter the name, salary, and department for the role and that role is added to the database
         } else if (viewAnswer.viewOption === 'add an employee') {
@@ -180,16 +181,33 @@ function viewEmployeeTable() {
     });
 };
 
-function addDepartmentQuery() {
-    const insertDepartmentTable = 'INSERT INTO department(name) VALUES (?);';
+function addDepartmentToTable(departmentName) {
     try {
-        const addDepartmentToList = connection.query(insertDepartmentTable, addDepartmentQuestion.addedDepartment);
+        connection.query(`INSERT INTO department(name) VALUES ('${departmentName}')`, (err, res) => {
+            if (err) throw err;
+            console.log(res);
+        } );
         console.log(addDepartmentQuestion.addedDepartment);
     } catch (error) {
         console.log(error);
     }
-
 };
+
+function addRoleToTable(departmentName) {
+    try {
+        connection.query(`INSERT INTO role(title, salary, department_id) VALUES ('${answer.roleName}',  )`, (err, res) => {
+            if (err) throw err;
+            console.log(res);
+        } );
+        console.log(addDepartmentQuestion.addedDepartment);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+//switch statement for department id
+
+// pass inquirer variable, pass answer as object. answers.department name (destructure it)
 
 
 // function init () {
